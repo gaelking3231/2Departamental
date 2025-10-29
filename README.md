@@ -106,7 +106,8 @@ El proyecto incluye una suite de pruebas E2E que valida el flujo de compra compl
 
 *Diagrama generado desde el "Schema Visualizer" de Supabase.*
 
-![ERD del Proyecto](ERD.png)
+![ERD del Proyecto]![ERD](https://github.com/user-attachments/assets/4da1ae70-c4dd-4c90-a22c-494ac0b4ae9b)
+()
 
 ---
 
