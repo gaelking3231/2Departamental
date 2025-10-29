@@ -104,8 +104,6 @@ El proyecto incluye una suite de pruebas E2E que valida el flujo de compra compl
 
 ## 📊 ERD (Diagrama Entidad-Relación)
 
-(Esta sección la llenamos en el Paso 3, por ahora la dejamos así)
-
 *Diagrama generado desde el "Schema Visualizer" de Supabase.*
 
 ![ERD del Proyecto](ERD.png)
@@ -114,9 +112,54 @@ El proyecto incluye una suite de pruebas E2E que valida el flujo de compra compl
 
 ## 🔒 Políticas de RLS Documentadas
 
-(Esta sección la llenamos en el Paso 4, por ahora la dejamos así)
+A continuación se detallan las políticas de seguridad a nivel de fila (RLS) implementadas en Supabase para cada tabla:
 
-*A continuación se detallan las políticas de RLS clave del proyecto.*
+### Tabla: `products`
+* **Política:** `Public can read active products`
+* **Explicación:** Permite que *cualquier* usuario (anónimo o autenticado) pueda ver (SELECT) los productos que están marcados como activos. Esta es la política principal que permite a la gente ver el catálogo.
+* **Extracto SQL (USING expression):** (Probablemente `(is_active = true)`)
+
+* **Política:** `Admins can CRUD products`
+* **Explicación:** Permite a los usuarios con el rol `admin` realizar cualquier operación (Crear, Leer, Actualizar, Borrar) en los productos.
+* **Extracto SQL:** (Probablemente `(auth.role() = 'admin'::text)`)
+
+### Tabla: `categories`
+* **Política:** `Public can read categories`
+* **Explicación:** Permite que cualquier usuario (anónimo o autenticado) pueda ver (SELECT) la lista de categorías.
+* **Extracto SQL (USING expression):** `true`
+
+* **Política:** `Admins can CRUD categories`
+* **Explicación:** Permite a los usuarios `admin` gestionar las categorías.
+* **Extracto SQL:** (Probablemente `(auth.role() = 'admin'::text)`)
+
+### Tabla: `profiles`
+* **Política:** `Users can select their own profile`
+* **Explicación:** Política de seguridad clave. Asegura que un usuario autenticado solo pueda leer (SELECT) la fila de `profiles` que coincide con su propio ID.
+* **Extracto SQL (USING expression):** `(auth.uid() = id)`
+
+* **Política:** `Users can update their own profile`
+* **Explicación:** Permite a un usuario actualizar (UPDATE) únicamente su propia fila de perfil.
+* **Extracto SQL (WITH CHECK expression):** `(auth.uid() = id)`
+
+* **Política:** `Users can insert their own profile`
+* **Explicación:** Permite a un usuario recién registrado crear (INSERT) su propia fila de perfil.
+* **Extracto SQL (WITH CHECK expression):** `(auth.uid() = id)`
+
+* **Política:** (Y otras políticas de admin/borrado...)
+
+### Tabla: `carts` y `cart_items`
+* **Política:** `Allow owner to select, update, delete own cart` / `cart_items_owner`
+* **Explicación:** Estas políticas aseguran que un usuario autenticado solo pueda ver, modificar o borrar *su propio* carrito y los artículos *dentro* de él. Evita que un usuario vea el carrito de otro.
+* **Extracto SQL (USING / WITH CHECK):** (Probablemente `(auth.uid() = user_id)`)
+
+### Tabla: `orders` y `order_items`
+* **Política:** `orders_select_owner_or_admin` / `Los usuarios pueden ver los items de sus propios pedidos`
+* **Explicación:** Políticas similares al carrito. Un usuario solo puede ver los pedidos (`orders`) y los artículos de pedido (`order_items`) que le pertenecen.
+* **Extracto SQL (USING expression):** (Probablemente `(auth.uid() = user_id)`)
+
+* **Política:** `orders_insert_owner` / `Users can insert items for their own orders`
+* **Explicación:** Permite a un usuario crear (INSERT) nuevos pedidos y artículos de pedido para sí mismo (al completar una compra).
+* **Extracto SQL (WITH CHECK expression):** (Probablemente `(auth.uid() = user_id)`)
 
 ### Tabla: `products`
 * **Política:** "Permitir acceso de lectura (SELECT) a todos."
@@ -129,10 +172,6 @@ El proyecto incluye una suite de pruebas E2E que valida el flujo de compra compl
 * **Código SQL (USING / WITH CHECK):** `(auth.uid() = user_id)`
 
 ---
-
-## 🗄️ Scripts SQL (Migraciones/Semilla)
-
-(Esta sección la llenamos en el Paso 5, por ahora la dejamos así)
 
 * **Migraciones:** Los scripts para crear la estructura de la base de datos se encuentran en la carpeta `/supabase/migrations`.
 * **Semilla (Seed):** El script para poblar la base de datos con datos de prueba se encuentra en `/supabase/seed.sql`.
