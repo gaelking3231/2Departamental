@@ -6,8 +6,8 @@ Proyecto de e-commerce completo que integra un frontend (React/Vite), autenticac
 
 ## 🔗 Enlace de Despliegue
 
-* **Aplicación Desplegada:** 
-* **Backend:** `https://hdnfuyrregwuhqzclnix.supabase.co` (Tu URL de Supabase)
+* **Aplicación Desplegada:** https://2-departamental.vercel.app/
+* **Backend:** `https://hdnfuyrregwuhqzclnix.supabase.co` 
 
 ---
 
