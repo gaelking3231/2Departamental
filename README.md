@@ -1,4 +1,4 @@
-# 🛒 Tienda E-Commerce (2do Departamental)
+# 🛒 Tienda Tecnologia(2do Departamental)
 
 Proyecto de e-commerce completo que integra un frontend (React/Vite), autenticación y base de datos con Supabase, y pasarela de pagos con Stripe. Incluye una suite de pruebas End-to-End (E2E) con Cypress.
 
